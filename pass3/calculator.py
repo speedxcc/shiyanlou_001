@@ -58,21 +58,26 @@ class UserData(object):
 
 class IncomeTaxCalculator(object):
     
-    def calc_for_al_userdata(self):
+    def calc_for_all_userdata(self):
         result = []
+        rate = 0
+        for name, v in config.config.items():
+            if name not in ['JiShuL' ,'JiShuH']:
+                rate += v
+               
         for person in userdata.userdata:
-            rate = 0.5
+            
             number = person[0]
             salary = person[1]
-            l = config.config[JiShuL]
-            h = config.config[JiShuH]
+            l = config.config['JiShuL']
+            h = config.config['JiShuH']
             if salary < l:
                 found = l * rate
             elif salary > h:
                 found = h * rate
             else:
                 found = salary * rate
-            tax = salary - found -3500
+            tax = salary - found - 3500
         
             if tax <= 0:
                 tax_out = 0
@@ -98,13 +103,23 @@ class IncomeTaxCalculator(object):
             else:
                 tax_out = tax * 0.45 - 13505
                 money = salary - tax_out - found 
-         
-            data = number + '{}'.format(money) 
-            print('111')
+            data = [number,salary,'{:.2f}'.format(found),'{:.2f}'.format(tax_out),'{:.2f}'.format(money)]               
+            #data = number + ',{},{:.2f},{:.2f},{:.2f}'.format(salary,found,tax_out,money)  
+            print(data)
+            result.append(data)
+        print(result)
+        return result
+
+    def export(self, default='csv'):
+        out = self.calc_for_all_userdata()
+     #   test = [['1111','1222'],'2','3']
+        with open(args.outfile,'w+') as f:
+            writer = csv.writer(f)
+            writer.writerows(out)
 
 if __name__ == "__main__":
     args = Args()
     config = Config()
     userdata = UserData()
     cal = IncomeTaxCalculator()
-    cal.calc_for_al_userdata()
+    cal.export()
