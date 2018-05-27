@@ -1,0 +1,17 @@
+{% for x in test.values() %}
+
+    <p> {{ x }} </p>
+
+{% endfor %}
+
+{% for x in article %}
+
+    <p> {{ x['title'] }} </p>
+
+{% endfor %}
+
+{% for x in name %}
+
+    <p> {{ x }} </p>
+
+{% endfor %}
