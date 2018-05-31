@@ -1,0 +1,7 @@
+
+{% for x in art %}
+
+   <a href=localhost:3000/files/{{x.id}} </a> 
+    <p> {{x.title}}  </p>
+{% endfor %}
+
