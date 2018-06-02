@@ -1,8 +1,14 @@
 from flask import Flask, render_template
 from flask_sqlalchemy import SQLAlchemy
-import datetime
+from datetime import datetime
 import os
 import json
+import collections
+
+from pymongo import MongoClient
+client = MongoClient('127.0.0.1',27017)
+mg =client.shiyanlou
+
 
 app = Flask(__name__)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
@@ -17,6 +23,18 @@ class File(db.Model):
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
     content = db.Column(db.Text)
     category = db.relationship('Category')
+
+    def add_tag(self,tag_name):
+        user = {'id': self.id, 'tag_name': tag_name }
+        name = self.title
+        mg.title.insert_one(user)
+
+    def remove_tag(self,tag_name):
+        name = self.title
+        mg.name.delete_one({tag_name:tag_name})
+
+
+    
     def __init__(self,title,created_time,category,content):
         self.title = title
         self.created_time = created_time
@@ -41,9 +59,11 @@ def index():
 
 @app.route('/files/<file_id>')
 def file(file_id):
-    wenzhang = File.query.filter_by(id='file_id').first()
+    wenzhang = File.query.filter_by(id=file_id).first()
+    cate = Category.query.filter_by(id=wenzhang.id).first()
      
-    return render_template('file.html',wenzhang=wenzhang)
+    return render_template('file.html',wenzhang=wenzhang,cate=cate)
+
     
 @app.errorhandler(404)
 def not_found(error):
