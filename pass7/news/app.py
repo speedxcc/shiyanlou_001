@@ -26,15 +26,19 @@ class File(db.Model):
 
     def add_tag(self,tag_name):
         user = {'id': self.id, 'tag_name': tag_name }
-        name = self.title
-        mg.title.insert_one(user)
+        number = 'id'+str(self.id)
+        mg.number.insert_one(user)
+        
 
     def remove_tag(self,tag_name):
-        name = self.title
-        mg.name.delete_one({tag_name:tag_name})
+        number = 'id'+str(self.id)
+        mg.number.delete_one({tag_name:'tag_name'})
+    @property
+    def tags(self):
+        number = 'id'+str(self.id)
+        tags = mg.number.find_one({id:'self.id'})
+        return tags
 
-
-    
     def __init__(self,title,created_time,category,content):
         self.title = title
         self.created_time = created_time

@@ -1,3 +1,9 @@
- <p> {{ wenzhang.content }} </p>
+ <p> id:{{ wenzhang.id }} </p>
+ <p> title:{{ wenzhang.title }} </p>
+ <p> create_time:{{ wenzhang.created_time }} </p>
+ <p> content:{{ wenzhang.content }} </p>
+ <p> cate_name:{{ cate.name }} </p>
+
+
 
 
