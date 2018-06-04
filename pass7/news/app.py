@@ -7,7 +7,7 @@ import collections
 
 from pymongo import MongoClient
 client = MongoClient('127.0.0.1',27017)
-mg =client.shiyanlou
+mg =client.shiyanlou009
 
 
 app = Flask(__name__)
@@ -24,19 +24,33 @@ class File(db.Model):
     content = db.Column(db.Text)
     category = db.relationship('Category')
 
+
     def add_tag(self,tag_name):
-        user = {'id': self.id, 'tag_name': tag_name }
-        number = 'id'+str(self.id)
-        mg.number.insert_one(user)
-        
+        '''
+        if data:
+        '''
+        tags = mg.tags.find_one({'title':self.title})['tag_name']
+        if not tag_name in tags:
+            tags.append(tag_name)
+            mg.tags.update_one({'title':self.title},{'$set':{'tag_name':tags}})
+        '''
+        else:
+            mg.tags.insert_one({'title': self.title, 'tag_name': [tag_name]})
+        if tag_name not in tag['tag_name']:
+            li = tag['tag_name']
+            add_tag = li.append('tag_name')
+            mg.tags.update_one({'title':self.title},{'$set':{'tag_name':add_tag}})
+        '''
 
     def remove_tag(self,tag_name):
-        number = 'id'+str(self.id)
-        mg.number.delete_one({tag_name:'tag_name'})
+        tags = mg.tags.find_one({'title':self.title})['tag_name']
+        if tag_name in tags:
+            tags.remove(tag_name)
+            mg.tags.update_one({title:'self.title'},{'$set':{'tag_name': tags}})
+
     @property
     def tags(self):
-        number = 'id'+str(self.id)
-        tags = mg.number.find_one({id:'self.id'})
+        tags = mg.tags.find_one({'title':self.title})['tag_name']
         return tags
 
     def __init__(self,title,created_time,category,content):
@@ -44,6 +58,8 @@ class File(db.Model):
         self.created_time = created_time
         self.category = category
         self.content = content
+        user = {'title': self.title, 'tag_name': [] }
+        mg.tags.insert_one(user)
     def __repr__(self):
         return '<File(name=%s)>' % self.id
 
@@ -65,8 +81,8 @@ def index():
 def file(file_id):
     wenzhang = File.query.filter_by(id=file_id).first()
     cate = Category.query.filter_by(id=wenzhang.id).first()
-     
-    return render_template('file.html',wenzhang=wenzhang,cate=cate)
+    tags = File.tags 
+    return render_template('file.html',wenzhang=wenzhang,cate=cate,tags=tags)
 
     
 @app.errorhandler(404)

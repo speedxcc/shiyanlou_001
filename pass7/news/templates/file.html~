@@ -4,6 +4,10 @@
  <p> content:{{ wenzhang.content }} </p>
  <p> cate_name:{{ cate.name }} </p>
 
+{% for tag in tags %}
+<p> {{ tag }} </p>
+{% endfor %}
+
 
 
 
