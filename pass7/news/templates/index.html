@@ -3,5 +3,11 @@
 
    <a href=localhost:3000/files/{{x.id}} </a> 
     <p> {{x.title}}  </p>
+    {% for tag in x.tags %}
+    <span>{{ tag }}</span>
+    {% endfor %}
 {% endfor %}
+
+
+
 

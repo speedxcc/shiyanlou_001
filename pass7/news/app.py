@@ -50,8 +50,9 @@ class File(db.Model):
 
     @property
     def tags(self):
-        tags = mg.tags.find_one({'title':self.title})['tag_name']
-        return tags
+        aaa = mg.tags.find_one({'title':self.title})
+       
+        return aaa['tag_name']
 
     def __init__(self,title,created_time,category,content):
         self.title = title
@@ -77,12 +78,12 @@ def index():
     art = File.query.all()
     return render_template('index.html',art=art)
 
-@app.route('/files/<file_id>')
+@app.route('/files/<int:file_id>')
 def file(file_id):
-    wenzhang = File.query.filter_by(id=file_id).first()
-    cate = Category.query.filter_by(id=wenzhang.id).first()
-    tags = File.tags 
-    return render_template('file.html',wenzhang=wenzhang,cate=cate,tags=tags)
+    wenzhang = File.query.get_or_404(file_id)
+   
+    cate = Category.query.filter_by(id=wenzhang.id).first() 
+    return render_template('file.html',wenzhang=wenzhang,cate=cate)
 
     
 @app.errorhandler(404)

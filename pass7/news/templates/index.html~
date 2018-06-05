@@ -5,3 +5,8 @@
     <p> {{x.title}}  </p>
 {% endfor %}
 
+{% for tag in art.tags %}
+    <span>{{ tag }}</span>
+{% endfor %}
+
+
